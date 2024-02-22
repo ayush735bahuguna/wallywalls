@@ -1,12 +1,12 @@
-import { View, Text } from 'react-native'
+import { View, Text, StatusBar } from 'react-native'
 import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import HeaderWithDrawerIcon from '../Components/Home/HeaderWithDrawerIcon'
 
-const CategoryScreen = () => {
+const CategoryScreen = ({ navigation }) => {
     return (
-        <SafeAreaView>
-            <Text>CategoryScreen</Text>
-        </SafeAreaView>
+        <View className='p-3' style={{ marginTop: StatusBar.currentHeight }}>
+            <HeaderWithDrawerIcon name='Category' navigation={navigation} />
+        </View>
     )
 }
 
