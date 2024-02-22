@@ -4,8 +4,8 @@ import Animated from 'react-native-reanimated';
 import { AntDesign } from '@expo/vector-icons';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { MaterialIcons } from '@expo/vector-icons';
 import { ActivityIndicator, Avatar } from 'react-native-paper';
+import SetWallpaper from '../Components/Detail Page/SetWallpaper';
 
 const DetailPage = ({ route, navigation }) => {
     const { URL, index, width, height, description, updated_at, UserProfileImage, UserName } = route.params;
@@ -24,9 +24,7 @@ const DetailPage = ({ route, navigation }) => {
 
                 <View className='z-10 flex flex-row gap-2' style={{ position: 'absolute', top: statusbarHeight + 10, right: 10 }}>
 
-                    <TouchableOpacity className={` h-10 w-10 bg-slate-700 rounded-full flex items-center justify-center`}  >
-                        <MaterialIcons name="wallpaper" size={22} color="white" />
-                    </TouchableOpacity>
+                    <SetWallpaper ImageUrl={URL} />
 
                     <TouchableOpacity onPress={() => { navigation.goBack(); }} className={` h-10 w-10 bg-slate-700 rounded-full flex items-center justify-center`}  >
                         <AntDesign name="close" size={24} color="white" />

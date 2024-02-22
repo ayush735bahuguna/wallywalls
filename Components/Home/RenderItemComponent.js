@@ -1,8 +1,8 @@
 import { memo } from "react";
-import { TouchableWithoutFeedback, View, Text, TouchableOpacity, Linking } from "react-native";
-import Animated from "react-native-reanimated";
+import { TouchableWithoutFeedback, View, Text, TouchableOpacity, Linking, } from "react-native";
 import Vibrate from "../Vibrate";
 import { Entypo } from '@expo/vector-icons';
+import { Image } from "expo-image";
 
 const renderItemComponent = ({ item, index, navigation, numColumns, screenWidth, setVisible, setUserObject }) => {
     return <View
@@ -26,9 +26,10 @@ const renderItemComponent = ({ item, index, navigation, numColumns, screenWidth,
             }}
         >
             <View>
-                <Animated.Image
+                <Image
                     source={{ uri: item?.urls?.small }}
                     className={`rounded-md`}
+                    placeholder={item?.blur_hash}
                     width={numColumns === 1 ? (screenWidth - 4) : (screenWidth / 2) - 4}
                     height={numColumns === 1 ? 200 : 270}
                     style={{ margin: 2 }}

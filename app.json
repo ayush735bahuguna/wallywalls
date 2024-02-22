@@ -21,7 +21,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.ayushbahuguna1122.wallywalls"
     },
     "web": {
       "favicon": "./assets/favicon.png"
