@@ -41,6 +41,7 @@ const Home = ({ route, navigation }) => {
 
     return (
         <FlatList
+            contentContainerStyle={{ backgroundColor: 'white' }}
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
             key={numColumns}

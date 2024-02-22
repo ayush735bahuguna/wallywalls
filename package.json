@@ -17,8 +17,12 @@
     "axios": "^1.6.7",
     "babel-plugin-transform-inline-environment-variables": "^0.4.4",
     "expo": "~50.0.7",
+    "expo-dev-client": "~3.3.8",
+    "expo-file-system": "~16.0.6",
     "expo-haptics": "~12.8.1",
     "expo-image": "^1.10.6",
+    "expo-permissions": "^14.4.0",
+    "expo-sharing": "^11.10.0",
     "expo-status-bar": "~1.11.1",
     "expo-updates": "~0.24.11",
     "nativewind": "^2.0.11",
@@ -32,7 +36,7 @@
     "react-native-vector-icons": "^10.0.3",
     "react-query": "^3.39.3",
     "tailwindcss": "^3.3.2",
-    "expo-dev-client": "~3.3.8"
+    "expo-media-library": "~15.9.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

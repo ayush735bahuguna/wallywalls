@@ -38,6 +38,16 @@
     },
     "updates": {
       "url": "https://u.expo.dev/52df6c49-911a-4117-9a57-35bc6fba7111"
-    }
+    },
+    "plugins": [
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow Wallywalls to access your photos.",
+          "savePhotosPermission": "Allow Wallywalls to save photos.",
+          "isAccessMediaLocationEnabled": true
+        }
+      ]
+    ]
   }
 }

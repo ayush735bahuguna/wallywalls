@@ -12,8 +12,8 @@ const HeaderWithDrawerIcon = ({ name, navigation }) => {
                     Vibrate();
                     navigation?.dispatch(DrawerActions.openDrawer())
                 }}>
-                    <View className=' bg-slate-300 rounded-xl w-[40px] h-[40px] flex items-center justify-center'>
-                        <Entypo name="menu" size={24} color="black" />
+                    <View className=' bg-sky-200 rounded-xl w-[40px] h-[40px] flex items-center justify-center'>
+                        <Entypo name="menu" size={30} color="black" />
                     </View>
                 </TouchableOpacity>
                 <Text className='text-4xl text-slate-600 font-bold'>{name}</Text>
