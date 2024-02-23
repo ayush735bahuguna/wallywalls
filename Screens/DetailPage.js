@@ -1,6 +1,5 @@
 import { View, Text, ScrollView, Dimensions, StatusBar, TouchableOpacity, Share } from 'react-native'
-import React, { useMemo, useRef, useState } from 'react'
-import Animated from 'react-native-reanimated';
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -10,9 +9,10 @@ import Vibrate from '../Components/Vibrate';
 import { FontAwesome6 } from '@expo/vector-icons';
 import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
+import { Image } from 'expo-image';
 
 const DetailPage = ({ route, navigation }) => {
-    const { URL, index, width, height, description, ImageId } = route.params;
+    const { URL, BlueHash, width, height, description, ImageId, Color } = route.params;
     const screenHeight = Dimensions.get("window").height + StatusBar.currentHeight;
     const screenWidth = Dimensions.get("window").width;
     const calculatedWidth = width / (Math.ceil(height / screenHeight));
@@ -22,11 +22,14 @@ const DetailPage = ({ route, navigation }) => {
     const snapPoints = useMemo(() => ['10%', '40%'], []);
     const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
     const [downloadLoading, setdownloadLoading] = useState(false)
+    const [oppositeColor, setoppositeColor] = useState('')
+
 
     const SaveImageToGallary = async () => {
         Vibrate();
         setdownloadLoading(true)
         await requestPermission();
+
         if (permissionResponse?.granted) {
             FileSystem.downloadAsync(URL, FileSystem.documentDirectory + ImageId + '.jpg')
                 .then(({ uri }) => {
@@ -54,6 +57,36 @@ const DetailPage = ({ route, navigation }) => {
             console.log(error);
         }
     }
+
+
+
+    function invertColor(hex) {
+        if (hex.indexOf('#') === 0) {
+            hex = hex.slice(1);
+        }
+        if (hex.length === 3) {
+            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+        }
+        if (hex.length !== 6) {
+            throw new Error('Invalid HEX color.');
+        }
+        var r = (255 - parseInt(hex.slice(0, 2), 16)).toString(16),
+            g = (255 - parseInt(hex.slice(2, 4), 16)).toString(16),
+            b = (255 - parseInt(hex.slice(4, 6), 16)).toString(16);
+        return '#' + padZero(r) + padZero(g) + padZero(b);
+    }
+
+    useEffect(() => {
+        const OppositeColor = invertColor(Color)
+        setoppositeColor(OppositeColor);
+    }, [])
+
+    function padZero(str, len) {
+        len = len || 2;
+        var zeros = new Array(len).join('0');
+        return (zeros + str).slice(-len);
+    }
+
     return (
         <GestureHandlerRootView>
             <View className='relative'>
@@ -74,8 +107,8 @@ const DetailPage = ({ route, navigation }) => {
                 </View>
 
                 <ScrollView horizontal={true}>
-                    {Loading ?
-                        <View style={{ marginTop: statusbarHeight, width: screenWidth }} className='flex-1 items-center justify-center flex-row'>
+                    {/* {Loading ?
+                        <View style={{ marginTop: statusbarHeight, width: screenWidth }} className='flex-1 items-center justify-center flex-row absolute top-1/2 z-10'>
                             <ActivityIndicator animating={true} />
                             <View className='p-4'>
                                 <Text>Loading high quality image</Text>
@@ -83,24 +116,25 @@ const DetailPage = ({ route, navigation }) => {
                         </View>
                         :
                         <View></View>
-                    }
+                    } */}
                     <View style={{ height: screenHeight, width: calculatedWidth }}>
-                        <Animated.Image
+                        <Image
                             source={{ uri: URL }}
                             style={{ width: calculatedWidth, height: screenHeight }}
-                            sharedTransitionTag={`${index}Image`}
+                            placeholder={BlueHash}
                             onLoadEnd={() => { setLoading(false) }}
                         />
                     </View>
                 </ScrollView>
             </View >
             <BottomSheet
+                backgroundStyle={{ backgroundColor: Color }}
                 ref={bottomSheetRef}
                 index={1}
                 snapPoints={snapPoints}
             >
                 <View className='p-2'>
-                    <Text className='text-xl font-bold'>{description}</Text>
+                    <Text className='text-xl font-bold' style={{ color: oppositeColor }}>{description}</Text>
                     {/* <Text className='text-right p-1'>{updated_at}</Text> */}
                     {/* <Text className='text-right p-1'>{UserName}</Text>
                     <Avatar.Image size={50} source={UserProfileImage} /> */}

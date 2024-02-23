@@ -60,7 +60,7 @@ const Home = ({ route, navigation }) => {
 
                     <HeaderWithDrawerIcon name='Home' navigation={navigation} />
 
-                    <TouchableOpacity onPress={() => { navigation.navigate('Search'); Vibrate() }} className='bg-slate-200 rounded-xl flex flex-row items-center justify-start p-2 mt-7'>
+                    <TouchableOpacity onPress={() => { navigation.navigate('Search', { query: null }); Vibrate() }} className='bg-slate-200 rounded-xl flex flex-row items-center justify-start p-2 mt-7'>
                         <AntDesign className='m-2' name="search1" size={24} color="black" />
                         <Text className='m-2'>Search photos...</Text>
                     </TouchableOpacity>

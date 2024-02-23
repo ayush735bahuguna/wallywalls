@@ -5,7 +5,7 @@ import { Entypo } from '@expo/vector-icons';
 import { Image } from "expo-image";
 
 const renderItemComponent = ({ item, index, navigation, numColumns, screenWidth, setVisible, setUserObject }) => {
-    console.log(item?.urls);
+    // console.log(item?.color);
     return <View className={`${numColumns === 1 ? 'w-full' : 'w-1/2'}rounded-md`}>
         <TouchableWithoutFeedback
             onPress={() => {
@@ -20,7 +20,9 @@ const renderItemComponent = ({ item, index, navigation, numColumns, screenWidth,
                     UserProfileImage: item?.user.profile_image?.small,
                     UserPortfolio: item?.user.social?.portfolio_url,
                     UserTotalPhotos: item?.user?.total_photos,
-                    ImageId: item?.id
+                    ImageId: item?.id,
+                    BlueHash: item?.blur_hash,
+                    Color: item?.color
                 })
                 Vibrate();
             }}

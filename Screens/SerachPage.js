@@ -9,7 +9,8 @@ import UserModel from '../Components/Home/UserModel';
 import RenderItemComponent from '../Components/Home/RenderItemComponent';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const SerachPage = ({ navigation }) => {
+const SerachPage = ({ route, navigation }) => {
+    const { query } = route.params;
     const [searchQuery, setSearchQuery] = React.useState('');
     const [Query, setQuery] = React.useState(null);
     const AccessKey = process.env.ACCESS_KEY;
@@ -22,6 +23,12 @@ const SerachPage = ({ navigation }) => {
     const screenWidth = Dimensions.get("window").width;
     const [visible, setVisible] = React.useState(false);
 
+    useEffect(() => {
+        if (query !== null) {
+            setQuery(query)
+            queryClient.invalidateQueries(['SearchImages'])
+        }
+    }, [query])
 
     const fetchImages = async ({ pageParam = 1 }) => {
         if (Query) {
@@ -86,7 +93,7 @@ const SerachPage = ({ navigation }) => {
                             {Query &&
                                 <>
                                     <View className='flex items-center justify-between flex-row my-4'>
-                                        <View></View>
+                                        <Text className='font-bold text-2xl px-2'>{Query}</Text>
                                         <View className='flex gap-2 flex-row'>
                                             <View className={`${numColumns === 1 && 'bg-slate-200'} rounded-full p-2`}>
                                                 <MaterialCommunityIcons name="format-list-text" size={24} color="black"

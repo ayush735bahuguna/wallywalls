@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, FlatList, ScrollView, Dimensions } from 'react-native'
+import { View, Text, StatusBar, FlatList, ScrollView, Dimensions, Touchable, TouchableWithoutFeedback } from 'react-native'
 import React from 'react'
 import HeaderWithDrawerIcon from '../Components/Home/HeaderWithDrawerIcon'
 import { Image } from 'expo-image'
@@ -30,21 +30,29 @@ const CategoryScreen = ({ navigation }) => {
 
                 <View className='flex flex-wrap items-center justify-center flex-row mt-5'>
                     {DataGrid?.map((item, index) => {
-                        return <View key={index} className='m-1 rounded-xl relative'>
-                            <Text className='absolute bottom-0 z-10 text-xl text-white font-bold p-2'>{item?.name}</Text>
-                            <Image source={{ uri: item?.image }} className='rounded-md' style={{ width: screenWidth / 2 - 20, height: screenWidth / 2 - 30 }} blurRadius={0.5} />
-                        </View>
+                        return <TouchableWithoutFeedback key={index} onPress={() => {
+                            navigation.navigate('Search', { query: item?.name })
+                        }}>
+                            <View className='m-1 rounded-xl relative'>
+                                <Text className='absolute bottom-0 z-10 text-xl text-white font-bold p-2'>{item?.name}</Text>
+                                <Image source={{ uri: item?.image }} className='rounded-md' style={{ width: screenWidth / 2 - 20, height: screenWidth / 2 - 30 }} blurRadius={0.5} />
+                            </View>
+                        </TouchableWithoutFeedback>
                     })}
                 </View>
 
 
 
-                <View className=''>
+                <View>
                     {Data?.map((item, index) => {
-                        return <View key={index} className='m-1 rounded-xl relative'>
-                            <Text className='absolute font-bold bottom-0 z-10 text-xl text-white p-2'>{item?.name}</Text>
-                            <Image source={{ uri: item?.image }} className='rounded-md h-[120px] w-full' blurRadius={0.5} />
-                        </View>
+                        return <TouchableWithoutFeedback key={index} onPress={() => {
+                            navigation.navigate('Search', { query: item?.name })
+                        }}>
+                            <View key={index} className='m-1 rounded-xl relative'>
+                                <Text className='absolute font-bold bottom-0 z-10 text-xl text-white p-2'>{item?.name}</Text>
+                                <Image source={{ uri: item?.image }} className='rounded-md h-[120px] w-full' blurRadius={0.5} />
+                            </View>
+                        </TouchableWithoutFeedback>
                     })}
                 </View>
             </View>
