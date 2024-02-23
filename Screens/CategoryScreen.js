@@ -24,7 +24,7 @@ const CategoryScreen = ({ navigation }) => {
     ]
 
     return (
-        <ScrollView>
+        <ScrollView className='bg-white'>
             <View className='p-3' style={{ marginTop: StatusBar.currentHeight }}>
                 <HeaderWithDrawerIcon name='Category' navigation={navigation} />
 

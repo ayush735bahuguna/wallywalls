@@ -1,5 +1,5 @@
-import { View, Text, ScrollView, Dimensions, FlatList, StatusBar } from 'react-native'
-import React, { useEffect } from 'react'
+import { View, Text, ScrollView, Dimensions, FlatList, StatusBar, TouchableOpacity } from 'react-native'
+import React, { useEffect, useRef } from 'react'
 import { ActivityIndicator, Searchbar } from 'react-native-paper'
 import { Ionicons } from '@expo/vector-icons';
 import { useInfiniteQuery, useQueryClient } from 'react-query';
@@ -8,6 +8,7 @@ import Vibrate from '../Components/Vibrate';
 import UserModel from '../Components/Home/UserModel';
 import RenderItemComponent from '../Components/Home/RenderItemComponent';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 
 const SerachPage = ({ route, navigation }) => {
     const { query } = route.params;
@@ -22,6 +23,7 @@ const SerachPage = ({ route, navigation }) => {
     const [numColumns, setnumColumns] = React.useState(2);
     const screenWidth = Dimensions.get("window").width;
     const [visible, setVisible] = React.useState(false);
+    const flatListRef = useRef(null);
 
     useEffect(() => {
         if (query !== null) {
@@ -51,87 +53,101 @@ const SerachPage = ({ route, navigation }) => {
     }, [data])
 
     return (
-        <FlatList
-            contentContainerStyle={{ backgroundColor: 'white' }}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}
-            key={numColumns}
-            numColumns={numColumns}
-            data={Data?.pages?.map(page => page?.results).flat()}
-            refreshing={isLoading}
-            onEndReachedThreshold={0}
-            onStartReached={() => { Vibrate() }}
-            onEndReached={() => {
-                Vibrate()
-                if ((Data?.pages?.map(page => page?.results).flat())?.length !== 0) {
-                    if (hasNextPage && !isLoading && !isFetching && !isFetchingNextPage) { fetchNextPage() }
-                }
-            }}
-            onRefresh={() => {
-                setData([])
-                queryClient.invalidateQueries(['SearchImages'])
-            }}
-            ListHeaderComponent={
-                <View className='p-3' style={{ marginTop: StatusBar.currentHeight }}>
-                    <Searchbar
-                        placeholder="Search photos..."
-                        onChangeText={setSearchQuery}
-                        value={searchQuery}
-                        autoFocus={true}
-                        onSubmitEditing={() => {
-                            setData([])
-                            setQuery(searchQuery)
-                            queryClient.invalidateQueries(['SearchImages'])
-                        }}
-                    />
-                    {(Data?.pages?.map(page => page?.results).flat())?.length === 0 ?
-                        <View>
-                            <Text className='p-5 text-center text-xl'>Oops! No results</Text>
-                        </View>
-                        :
-                        <>
-                            {Query &&
-                                <>
-                                    <View className='flex items-center justify-between flex-row my-4'>
-                                        <Text className='font-bold text-2xl px-2'>{Query}</Text>
-                                        <View className='flex gap-2 flex-row'>
-                                            <View className={`${numColumns === 1 && 'bg-slate-200'} rounded-full p-2`}>
-                                                <MaterialCommunityIcons name="format-list-text" size={24} color="black"
-                                                    onPress={() => { setnumColumns(1); Vibrate() }} />
-                                            </View>
-                                            <View className={`${numColumns === 2 && 'bg-slate-200'} rounded-full p-2`}>
-                                                <Ionicons name="grid-outline" size={24} color="black"
-                                                    onPress={() => { setnumColumns(2); Vibrate() }} />
+        <View className='relative'>
+            {(Data?.pages?.map(page => page?.results).flat())?.length !== 0 &&
+                <>
+                    {Query &&
+                        <TouchableOpacity className='absolute bottom-4 right-4 bg-black p-2 z-30 rounded-full'
+                            onPress={() => {
+                                Vibrate();
+                                flatListRef.current.scrollToOffset({ animated: true, offset: 0 });
+                            }}>
+                            <AntDesign name="arrowup" size={26} color="white" />
+                        </TouchableOpacity>
+                    }
+                </>}
+            <FlatList
+                ref={flatListRef}
+                contentContainerStyle={{ backgroundColor: 'white' }}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                key={numColumns}
+                numColumns={numColumns}
+                data={Data?.pages?.map(page => page?.results).flat()}
+                refreshing={isLoading}
+                onEndReachedThreshold={0}
+                onStartReached={() => { Vibrate() }}
+                onEndReached={() => {
+                    Vibrate()
+                    if ((Data?.pages?.map(page => page?.results).flat())?.length !== 0) {
+                        if (hasNextPage && !isLoading && !isFetching && !isFetchingNextPage) { fetchNextPage() }
+                    }
+                }}
+                onRefresh={() => {
+                    setData([])
+                    queryClient.invalidateQueries(['SearchImages'])
+                }}
+                ListHeaderComponent={
+                    <View className='p-3' style={{ marginTop: StatusBar.currentHeight }}>
+                        <Searchbar
+                            placeholder="Search photos..."
+                            onChangeText={setSearchQuery}
+                            value={searchQuery}
+                            autoFocus={true}
+                            onSubmitEditing={() => {
+                                setData([])
+                                setQuery(searchQuery)
+                                queryClient.invalidateQueries(['SearchImages'])
+                            }}
+                        />
+                        {(Data?.pages?.map(page => page?.results).flat())?.length === 0 ?
+                            <View>
+                                <Text className='p-5 text-center text-xl'>Oops! No results</Text>
+                            </View>
+                            :
+                            <>
+                                {Query &&
+                                    <>
+                                        <View className='flex items-center justify-between flex-row my-4'>
+                                            <Text className='font-bold text-2xl px-2'>{Query}</Text>
+                                            <View className='flex gap-2 flex-row'>
+                                                <View className={`${numColumns === 1 && 'bg-slate-200'} rounded-full p-2`}>
+                                                    <MaterialCommunityIcons name="format-list-text" size={24} color="black"
+                                                        onPress={() => { setnumColumns(1); Vibrate() }} />
+                                                </View>
+                                                <View className={`${numColumns === 2 && 'bg-slate-200'} rounded-full p-2`}>
+                                                    <Ionicons name="grid-outline" size={24} color="black"
+                                                        onPress={() => { setnumColumns(2); Vibrate() }} />
+                                                </View>
                                             </View>
                                         </View>
-                                    </View>
-                                    <UserModel visible={visible} setVisible={setVisible} UserObject={UserObject} />
-                                </>
-                            }
-                        </>}
-                </View >
-            }
-
-            renderItem={({ item, index }) => {
-                if (item) {
-                    return <RenderItemComponent item={item} index={index} navigation={navigation} numColumns={numColumns} screenWidth={screenWidth} setVisible={setVisible} setUserObject={setUserObject} />
-                } else {
-                    return null
+                                        <UserModel visible={visible} setVisible={setVisible} UserObject={UserObject} />
+                                    </>
+                                }
+                            </>}
+                    </View >
                 }
-            }}
+                renderItem={({ item, index }) => {
+                    if (item) {
+                        return <RenderItemComponent item={item} index={index} navigation={navigation} numColumns={numColumns} screenWidth={screenWidth} setVisible={setVisible} setUserObject={setUserObject} />
+                    } else {
+                        return null
+                    }
+                }}
 
-            ListFooterComponent={isFetchingNextPage ?
-                <View className='flex items-center justify-center flex-row'>
-                    <ActivityIndicator animating={true} />
-                    <View className='p-4'>
-                        <Text>Loading more image</Text>
+                ListFooterComponent={isFetchingNextPage ?
+                    <View className='flex items-center justify-center flex-row'>
+                        <ActivityIndicator animating={true} />
+                        <View className='p-4'>
+                            <Text>Loading more image</Text>
+                        </View>
                     </View>
-                </View>
-                : null}
-            keyExtractor={(item, index) => {
-                return (index + `${item?.id}`)
-            }}
-        />
+                    : null}
+                keyExtractor={(item, index) => {
+                    return (index + `${item?.id}`)
+                }}
+            />
+        </View>
     )
 }
 

@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Dimensions, StatusBar, TouchableOpacity, Share } from 'react-native'
+import { View, Text, ScrollView, Dimensions, StatusBar, TouchableOpacity, Share, Linking } from 'react-native'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import BottomSheet from '@gorhom/bottom-sheet';
@@ -10,20 +10,16 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
 import { Image } from 'expo-image';
-
 const DetailPage = ({ route, navigation }) => {
-    const { URL, BlueHash, width, height, description, ImageId, Color } = route.params;
+    const { URL, BlueHash, width, height, ImageId, Color, data } = route.params;
     const screenHeight = Dimensions.get("window").height + StatusBar.currentHeight;
-    const screenWidth = Dimensions.get("window").width;
     const calculatedWidth = width / (Math.ceil(height / screenHeight));
     const statusbarHeight = StatusBar.currentHeight;
     const [Loading, setLoading] = useState(true);
     const bottomSheetRef = useRef(null);
-    const snapPoints = useMemo(() => ['10%', '40%'], []);
+    const snapPoints = useMemo(() => ['5%', '50%'], []);
     const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
     const [downloadLoading, setdownloadLoading] = useState(false)
-    const [oppositeColor, setoppositeColor] = useState('')
-
 
     const SaveImageToGallary = async () => {
         Vibrate();
@@ -58,37 +54,10 @@ const DetailPage = ({ route, navigation }) => {
         }
     }
 
-
-
-    function invertColor(hex) {
-        if (hex.indexOf('#') === 0) {
-            hex = hex.slice(1);
-        }
-        if (hex.length === 3) {
-            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-        }
-        if (hex.length !== 6) {
-            throw new Error('Invalid HEX color.');
-        }
-        var r = (255 - parseInt(hex.slice(0, 2), 16)).toString(16),
-            g = (255 - parseInt(hex.slice(2, 4), 16)).toString(16),
-            b = (255 - parseInt(hex.slice(4, 6), 16)).toString(16);
-        return '#' + padZero(r) + padZero(g) + padZero(b);
-    }
-
-    useEffect(() => {
-        const OppositeColor = invertColor(Color)
-        setoppositeColor(OppositeColor);
-    }, [])
-
-    function padZero(str, len) {
-        len = len || 2;
-        var zeros = new Array(len).join('0');
-        return (zeros + str).slice(-len);
-    }
-
+    // console.log(data);
     return (
         <GestureHandlerRootView>
+            <StatusBar barStyle={'light-content'} />
             <View className='relative'>
 
                 <View className='z-10 flex flex-row gap-2' style={{ position: 'absolute', top: statusbarHeight + 10, right: 10 }}>
@@ -107,16 +76,6 @@ const DetailPage = ({ route, navigation }) => {
                 </View>
 
                 <ScrollView horizontal={true}>
-                    {/* {Loading ?
-                        <View style={{ marginTop: statusbarHeight, width: screenWidth }} className='flex-1 items-center justify-center flex-row absolute top-1/2 z-10'>
-                            <ActivityIndicator animating={true} />
-                            <View className='p-4'>
-                                <Text>Loading high quality image</Text>
-                            </View>
-                        </View>
-                        :
-                        <View></View>
-                    } */}
                     <View style={{ height: screenHeight, width: calculatedWidth }}>
                         <Image
                             source={{ uri: URL }}
@@ -128,16 +87,35 @@ const DetailPage = ({ route, navigation }) => {
                 </ScrollView>
             </View >
             <BottomSheet
-                backgroundStyle={{ backgroundColor: Color }}
+                backgroundStyle={{ backgroundColor: 'white' }}
                 ref={bottomSheetRef}
                 index={1}
                 snapPoints={snapPoints}
             >
                 <View className='p-2'>
-                    <Text className='text-xl font-bold' style={{ color: oppositeColor }}>{description}</Text>
-                    {/* <Text className='text-right p-1'>{updated_at}</Text> */}
-                    {/* <Text className='text-right p-1'>{UserName}</Text>
-                    <Avatar.Image size={50} source={UserProfileImage} /> */}
+                    <Text className='text-xl font-bold' >{data?.description}</Text>
+                    <View className='flex gap-3 flex-row items-center justify-between py-4'>
+
+                        <Text className='font-bold text-2xl'>{data?.user?.first_name}</Text>
+                        <View className='flex gap-3 flex-row px-3'>
+                            <TouchableOpacity
+                                onPress={() => { Linking.openURL(data?.user.social?.portfolio_url) }}
+                            >
+                                <Entypo name="link" size={24} color='black' />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => { Linking.openURL('https://www.instagram.com/' + data?.user.social?.instagram_username) }}
+                            >
+                                <Entypo name="instagram" size={24} color="red" />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => { Linking.openURL('https://twitter.com/' + data?.user.social?.twitter_username) }}
+                            >
+                                <Entypo name="twitter" size={24} color="blue" />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+
                 </View>
             </BottomSheet>
 

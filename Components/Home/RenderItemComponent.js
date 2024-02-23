@@ -10,19 +10,13 @@ const renderItemComponent = ({ item, index, navigation, numColumns, screenWidth,
         <TouchableWithoutFeedback
             onPress={() => {
                 navigation.navigate('DetailPage', {
-                    index: index,
                     URL: item?.urls?.raw,
-                    width: item?.width, height: item?.height,
-                    description: item?.description,
-                    updated_at: item?.updated_at,
-                    UserName: item?.user?.first_name,
-                    UserBio: item?.user?.bio,
-                    UserProfileImage: item?.user.profile_image?.small,
-                    UserPortfolio: item?.user.social?.portfolio_url,
-                    UserTotalPhotos: item?.user?.total_photos,
+                    width: item?.width,
+                    height: item?.height,
                     ImageId: item?.id,
                     BlueHash: item?.blur_hash,
-                    Color: item?.color
+                    Color: item?.color,
+                    data: item
                 })
                 Vibrate();
             }}

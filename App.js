@@ -1,27 +1,26 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { PaperProvider } from 'react-native-paper';
+import { MD3LightTheme, MD2DarkTheme, PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { QueryClient, QueryClientProvider } from 'react-query'
-import { DrawerItem, createDrawerNavigator, useDrawerProgress } from '@react-navigation/drawer';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import HomeScreen from './Screens/Home'
 import DetailPage from './Screens/DetailPage'
 import CategoryScreen from './Screens/CategoryScreen'
-
 import SerachPage from './Screens/SerachPage'
-import Settings from './Screens/Settings.js';
+// import Settings from './Screens/Settings.js';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
-import { FontAwesome6 } from '@expo/vector-icons';
-import { Dimensions, Text, View } from 'react-native';
+import { Dimensions, Text, View, useColorScheme } from 'react-native';
 
 const queryClient = new QueryClient();
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
+
+
 
 function DrawerNavigation() {
   return (
@@ -30,28 +29,10 @@ function DrawerNavigation() {
     >
       <Drawer.Screen name="Home" component={HomeScreen} options={{ headerShown: false, drawerIcon: ({ color }) => <Entypo name="home" size={24} color={color} /> }} />
       <Drawer.Screen name="Category" component={CategoryScreen} options={{ headerShown: false, drawerIcon: ({ color }) => <MaterialIcons name="category" size={24} color={color} /> }} />
-      <Drawer.Screen name="Settings" component={Settings} options={{ headerShown: false, drawerIcon: ({ color }) => <FontAwesome6 name="gear" size={24} color={color} /> }} />
+      {/* <Drawer.Screen name="Settings" component={Settings} options={{ headerShown: false, drawerIcon: ({ color }) => <FontAwesome6 name="gear" size={24} color={color} /> }} /> */}
     </Drawer.Navigator>
   );
 }
-const App = () => {
-  return (
-    <PaperProvider>
-      <StatusBar animated={true} style='auto' />
-      <QueryClientProvider client={queryClient}>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen name="DrawerNavigation" component={DrawerNavigation} options={{ headerShown: false }} />
-            <Stack.Screen name="DetailPage" component={DetailPage} options={{ headerShown: false }} />
-            <Stack.Screen name="Search" component={SerachPage} options={{ headerShown: false }} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </QueryClientProvider>
-    </PaperProvider>
-  )
-}
-
-
 function CustomDrawerContent(props) {
   const screenHeight = Dimensions.get("window").height;
 
@@ -67,7 +48,32 @@ function CustomDrawerContent(props) {
     </DrawerContentScrollView>
   );
 }
+const App = () => {
+  const colorScheme = 'light'
+  const DarkTheme = {
+    ...MD2DarkTheme,
+    // colors: {}
+  }
+  const LightTheme = {
+    ...MD3LightTheme,
+    // colors: {}
+  }
+  const theme = colorScheme === 'dark' ? DarkTheme : LightTheme;
 
-
+  return (
+    <PaperProvider theme={theme}>
+      <StatusBar animated={true} style='auto' />
+      <QueryClientProvider client={queryClient}>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="DrawerNavigation" component={DrawerNavigation} options={{ headerShown: false }} />
+            <Stack.Screen name="DetailPage" component={DetailPage} options={{ headerShown: false }} />
+            <Stack.Screen name="Search" component={SerachPage} options={{ headerShown: false }} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </QueryClientProvider>
+    </PaperProvider>
+  )
+}
 
 export default App
