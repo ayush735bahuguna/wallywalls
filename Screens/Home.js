@@ -78,8 +78,7 @@ const Home = ({ navigation, theme }) => {
     };
 
     return (
-        <View className='relative'>
-
+        <View className='relative h-full'>
             <TouchableOpacity className='absolute bottom-4 right-4 bg-black p-2 z-30 rounded-full'
                 onPress={() => {
                     Vibrate();
@@ -100,13 +99,12 @@ const Home = ({ navigation, theme }) => {
                 data={Data?.pages?.map(page => page).flat()}
                 refreshing={isLoading}
                 onEndReachedThreshold={0}
-                onStartReached={() => { Vibrate() }}
                 onEndReached={() => {
                     Vibrate()
                     if (hasNextPage && !isLoading && !isFetching && !isFetchingNextPage) { fetchNextPage() }
                 }}
                 onRefresh={() => { queryClient.invalidateQueries(['Images']) }}
-                renderItem={({ item, index }) => <RenderItemComponent item={item} index={index} navigation={navigation} numColumns={numColumns} screenWidth={screenWidth} setVisible={setVisible} setUserObject={setUserObject} />}
+                renderItem={({ item, index }) => <RenderItemComponent item={item} index={index} navigation={navigation} numColumns={numColumns} screenWidth={screenWidth} setVisible={setVisible} setUserObject={setUserObject} showfooter={true} />}
                 ListFooterComponent={isFetchingNextPage ?
                     <View className='flex items-center justify-center flex-row'>
                         <ActivityIndicator animating={true} />

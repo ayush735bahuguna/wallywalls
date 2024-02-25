@@ -129,7 +129,7 @@ const SerachPage = ({ route, navigation }) => {
                 }
                 renderItem={({ item, index }) => {
                     if (item) {
-                        return <RenderItemComponent item={item} index={index} navigation={navigation} numColumns={numColumns} screenWidth={screenWidth} setVisible={setVisible} setUserObject={setUserObject} />
+                        return <RenderItemComponent item={item} index={index} navigation={navigation} numColumns={numColumns} screenWidth={screenWidth} setVisible={setVisible} setUserObject={setUserObject} showfooter={true} />
                     } else {
                         return null
                     }

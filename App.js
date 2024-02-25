@@ -15,6 +15,7 @@ import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawe
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Dimensions, Text, View, useColorScheme } from 'react-native';
+import * as NavigationBar from 'expo-navigation-bar';
 
 const queryClient = new QueryClient();
 const Stack = createNativeStackNavigator();
@@ -59,10 +60,10 @@ const App = () => {
     // colors: {}
   }
   const theme = colorScheme === 'dark' ? DarkTheme : LightTheme;
-
+  NavigationBar.setBackgroundColorAsync("#000000");
   return (
     <PaperProvider theme={theme}>
-      <StatusBar animated={true} style='auto' />
+      <StatusBar animated={true} style='auto' backgroundColor="#ffffff86" />
       <QueryClientProvider client={queryClient}>
         <NavigationContainer>
           <Stack.Navigator>
